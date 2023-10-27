@@ -1,0 +1,18 @@
+
+    @${interfaceMethodUp}Mapping("/${interface.name}")
+    #if(${interface.comment}!="")
+    @Operation(summary = "${interface.comment}")
+    #end
+    #if(${interface.authorize}!="")
+    @PreAuthorize("@ss.hasPermission('${interface.authorize}')")
+    #end
+    #if(${interfaceInputSingleParam}!="")
+    ${interfaceInputSingleParam}
+    #end
+    public#if(${interfaceOutput}!="void") CommonResult<${interfaceOutput}>#else void#end ${interfaceNameHump}(#if(${interface.inputServlet})HttpServletResponse response#if(${interfaceInput} != ""),#end #end${interfaceInputValid}${interfaceInputRequest}#if(${interfaceInput} != "")${interfaceInput} ${interfaceInputVar}#end) {
+        #if(${interfaceOutput}!="void")
+        return success(${moduleNameHump}Service.${interfaceNameHump}(#if(${interface.inputServlet})response#if(${interfaceInput} != ""),#end #end#if(${interfaceInput} != "")${interfaceInputVar}#end));
+        #else
+        ${moduleNameHump}Service.${interfaceNameHump}(#if(${interface.inputServlet})response#if(${interfaceInput} != ""),#end #end#if(${interfaceInput} != "")${interfaceInputVar}#end);
+        #end
+    }

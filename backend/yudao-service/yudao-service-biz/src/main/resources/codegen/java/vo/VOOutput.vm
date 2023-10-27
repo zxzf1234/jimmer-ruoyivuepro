@@ -1,0 +1,26 @@
+package ${basePackage}.service.vo#foreach ($parentName in $parentNames).$parentName#end.${moduleNameHump};
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.*;
+import java.util.*;
+import javax.validation.constraints.*;
+## 处理 Date 字段的引入
+#foreach ($param in $outputParams)
+    #if (${param.variableType} == "LocalDateTime" || ${param.variableType} == "LocalDateTime[]")## 时间类型
+import org.springframework.format.annotation.DateTimeFormat;
+import static ${DateUtilsClassName}.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND;
+import java.time.LocalDateTime;
+        #break
+    #end
+#end
+
+@Schema(description = "${interface.comment}")
+@Data
+public class ${moduleNameHumpUp}${interfaceNameHumpUp}Output #if(${interface.outputExtendClass} != "")extends ${interface.outputExtendClass}#end {
+#foreach ($param in $outputParams)
+    #parse("codegen/java/vo/_paramInterface.vm")
+#end
+#foreach ($subclass in $outputSubclasses)
+    #parse("codegen/java/vo/_subclassInterface.vm")
+#end
+}

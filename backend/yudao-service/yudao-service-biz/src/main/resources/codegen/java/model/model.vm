@@ -1,0 +1,110 @@
+package ${basePackage}.service.model.${moduleName}.${table.businessName};
+
+import ${basePackage}.service.model.base.BaseEntity;
+#foreach ($column in $columns)
+#if (${column.relatedTable} !="")
+import ${basePackage}.service.model.${moduleName}.${column.relatedTableModuleName}.${column.humpRelatedTable};
+#end
+#end
+import org.babyfish.jimmer.sql.*;
+## 处理 Date 字段的引入
+#foreach ($column in $columns)
+#if (${column.humpName} != "id" && ${column.humpName} != "createTime" && ${column.humpName} != "updateTime" && ${column.humpName} != "creatorId" && ${column.humpName} != "updaterId" && ${column.humpName} != "deleted" && ${column.javaType} == "LocalDateTime")## 时间类型
+import java.time.LocalDateTime;
+#break
+#end
+#end
+## 处理 nullable 字段的引入
+#foreach ($column in $columns)
+#if (${column.nullable} == true || ${column.relatedTable} !="")
+import org.jetbrains.annotations.Nullable;
+#break
+#end
+#end
+## 处理 list 字段的引入
+#set($isList = false)
+#foreach ($column in $columns)
+    #if (${column.javaType.contains("List")} == true)
+import java.util.List;
+        #set($isList = true)
+        #break
+    #end
+#end
+#foreach ($mapping in $mappings)
+    #if(${mapping.isList} == true && $isList == false)
+import java.util.List;
+        #break
+    #end
+
+#end
+## 处理 Map 字段的引入
+#foreach ($column in $columns)
+    #if (${column.javaType.contains("Map")} == true)
+import java.util.Map;
+        #break
+    #end
+#end
+## 处理 UUID 字段的引入
+#foreach ($column in $columns)
+    #if (${column.javaType.contains("UUID")} == true)
+import org.babyfish.jimmer.sql.meta.UUIDIdGenerator;
+import java.util.UUID;
+        #break
+    #end
+#end
+@Entity
+public interface ${classNameHump} extends BaseEntity {
+#foreach ($column in $columns)
+    #if (${column.humpName} == "id")
+    #if (${column.javaType.contains("UUID")} == true)
+    @Id
+    @GeneratedValue(generatorType = UUIDIdGenerator.class)
+    UUID id();
+
+    #else
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    long id();
+
+    #end
+    #end
+    #if (${column.humpName} != "id" && ${column.humpName} != "createTime" && ${column.humpName} != "updateTime" && ${column.humpName} != "creatorId" && ${column.humpName} != "updaterId" && ${column.humpName} != "deleted")
+    #if (${column.nullable} == true)
+    @Nullable
+    #end
+    #if (${column.relatedTable} !="")
+    @IdView
+    @Nullable
+    #end
+    #if (${column.javaType.contains("List")} == true||${column.javaType.contains("Map")} == true)
+    @Serialized
+    #end
+    #foreach ($index in $indexes)
+    #if($index.indexType == "UNIQUE INDEX" && $index.columnNames.contains(${column.columnName}) && ${column.relatedTable} == "")
+    @Key
+    #end
+    #end
+    ${column.javaType} ${column.humpName}();
+
+    #if (${column.relatedTable} !="")
+    #set($humpNameLength = $column.humpName.length())
+    #set($humpNameLength = $humpNameLength - 2)
+    #foreach ($index in $indexes)
+    #if($index.indexType == "UNIQUE INDEX" && $index.columnNames.contains(${column.columnName}))
+    @Key
+    #end
+    #end
+    @ManyToOne
+    @Nullable
+    ${column.humpRelatedTable} ${column.humpName.substring(0,$humpNameLength)}();
+
+    #end
+    #end
+#end
+#foreach ($mapping in $mappings)
+    ${mapping.annotate}
+    #if(${mapping.isList} == true)
+    List<#end${mapping.humpMappingTable}#if(${mapping.isList} == true)>#end ${mapping.name}();
+
+#end
+}

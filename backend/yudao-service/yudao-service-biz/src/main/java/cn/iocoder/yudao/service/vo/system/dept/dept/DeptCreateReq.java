@@ -1,0 +1,13 @@
+package cn.iocoder.yudao.service.vo.system.dept.dept;
+import cn.iocoder.yudao.service.vo.system.dept.baseVO.DeptBase;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
+@Schema(description = "管理后台 - 部门创建 Request VO")
+@Data
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
+public class DeptCreateReq extends DeptBase {
+}

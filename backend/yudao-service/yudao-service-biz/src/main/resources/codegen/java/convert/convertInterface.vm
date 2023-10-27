@@ -1,0 +1,17 @@
+#if(${interface.inputType}=="VOClass" && ${inputSrcExtendClass} != "")
+
+    ${inputSrcExtendClass} ${interfaceNameHump}InputConvert(${interfaceInput} input);
+#elseif(${interface.inputType}=="VOClassList" && ${inputSrcExtendClass} != "")
+
+    List<${inputSrcExtendClass}> ${interfaceNameHump}ListInputConvert(${interfaceInput} input);
+#end
+#if(${interface.outputType}=="VOClass" && ${outputSrcExtendClass} != "")
+
+    ${interfaceOutput} ${interfaceNameHump}OutputConvert(${outputSrcExtendClass} output);
+#elseif(${interface.outputType}=="VOClassList" && ${outputSrcExtendClass} != "")
+
+    ${interfaceOutput} ${interfaceNameHump}ListOutputConvert(List<${outputSrcExtendClass}> output);
+#elseif(${interface.outputType}=="VOClassPage" && ${outputSrcExtendClass} != "")
+
+    ${interfaceOutput}.replace("PageResult","list") ${interfaceNameHump}PageOutputConvert(Page<${outputSrcExtendClass}> output);
+#end

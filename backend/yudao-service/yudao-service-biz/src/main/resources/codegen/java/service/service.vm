@@ -1,0 +1,13 @@
+package ${basePackage}.service.service#foreach ($parentName in $parentNames).$parentName#end;
+
+import java.util.*;
+import ${basePackage}.service.vo#foreach ($parentName in $parentNames).$parentName#end.${nameHump}.*;
+import ${PageResultClassName};
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * ${module.comment} Service 接口
+ */
+public interface ${nameHumpUp}Service {
+
+}

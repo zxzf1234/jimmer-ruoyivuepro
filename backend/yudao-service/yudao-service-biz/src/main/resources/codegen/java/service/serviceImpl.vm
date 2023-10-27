@@ -1,0 +1,25 @@
+package ${basePackage}.service.service#foreach ($parentName in $parentNames).$parentName#end;
+
+import org.springframework.stereotype.Service;
+import javax.annotation.Resource;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.data.domain.Page;
+import java.util.*;
+import javax.servlet.http.HttpServletResponse;
+import ${PageResultClassName};
+import ${basePackage}.service.convert#foreach ($parentName in $parentNames).$parentName#end.${nameHumpUp}Convert;
+import ${basePackage}.service.vo#foreach ($parentName in $parentNames).$parentName#end.${nameHump}.*;
+
+import static ${ServiceExceptionUtilClassName}.exception;
+import static ${basePackage}.service.enums#foreach ($parentName in $parentNames).$parentName#break#end.ErrorCodeConstants.*;
+
+/**
+ * ${module.comment} Service 实现类
+ */
+@Service
+@Validated
+public class ${nameHumpUp}ServiceImpl implements ${nameHumpUp}Service {
+
+
+
+}

@@ -1,0 +1,42 @@
+package ${basePackage}.service.vo.${moduleName}.${table.businessName}.baseVO;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.*;
+import java.util.*;
+import javax.validation.constraints.*;
+#foreach ($column in $columns)
+#if (${column.javaType} == "BigDecimal")
+import java.math.BigDecimal;
+#break
+#end
+#end
+#foreach ($column in $columns)
+#if (${column.validation} == "InEnum")
+import ${basePackage}.framework.common.validation.InEnum;
+import ${basePackage}.framework.common.enums.*;
+#break
+#end
+#end
+## 处理 Date 字段的引入
+#foreach ($column in $columns)
+#if (${column.humpName} != "id" && ${column.humpName} != "createTime" && ${column.humpName} != "updateTime" && ${column.humpName} != "creatorId" && ${column.humpName} != "updaterId" && ${column.humpName} != "deleted" && ${column.javaType} == "LocalDateTime")## 时间类型
+import org.springframework.format.annotation.DateTimeFormat;
+import static ${DateUtilsClassName}.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND;
+import java.time.LocalDateTime;
+#break
+#end
+#end
+
+/**
+ * ${table.comment} Base VO，提供给添加、修改、详细的子 VO 使用
+ * 如果子 VO 存在差异的字段，请不要添加到这里，影响 Swagger 文档生成
+ */
+@Data
+public class ${simpleClassNameHump}Base {
+
+#foreach ($column in $columns)
+#if (${column.humpName} != "id" && ${column.humpName} != "createTime" && ${column.humpName} != "updateTime" && ${column.humpName} != "creatorId" && ${column.humpName} != "updaterId" && ${column.humpName} != "deleted")
+    #parse("codegen/java/vo/_column.vm")
+#end
+#end
+}

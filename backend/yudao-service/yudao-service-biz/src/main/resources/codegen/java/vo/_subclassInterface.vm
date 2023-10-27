@@ -1,0 +1,11 @@
+
+    @Schema(description = "${subclass.comment}")
+    @Data
+    #if(${subclass.type} == 0)
+    @Valid
+    #end
+    public static class ${subclass.name} #if(${subclass.inheritClass} != "")extends ${subclass.inheritClass} #end{
+        #foreach ($param in $subclass.subclassParams)
+        #parse("codegen/java/vo/_subclassParamInterface.vm")
+        #end
+    }

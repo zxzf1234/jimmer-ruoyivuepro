@@ -1,0 +1,39 @@
+package ${basePackage}.service.controller.${sceneEnum.basePackage}#foreach ($parentName in $parentNames).$parentName#end;
+import org.springframework.web.bind.annotation.*;
+import javax.annotation.Resource;
+import org.springframework.validation.annotation.Validated;
+#if ($sceneEnum.scene == 1)import org.springframework.security.access.prepost.PreAuthorize;#end
+
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Operation;
+
+import javax.validation.constraints.*;
+import javax.validation.*;
+import javax.servlet.http.*;
+import java.util.*;
+import java.io.IOException;
+
+import ${PageResultClassName};
+import ${CommonResultClassName};
+import static ${CommonResultClassName}.success;
+
+import ${ExcelUtilsClassName};
+
+import ${OperateLogClassName};
+import static ${OperateTypeEnumClassName}.*;
+
+import ${basePackage}.service.service#foreach ($parentName in $parentNames).$parentName#end.${nameHumpUp}Service;
+import ${basePackage}.service.vo#foreach ($parentName in $parentNames).$parentName#end.${nameHump}.*;
+
+@Tag(name = "${module.comment}")
+@RestController
+##二级的 businessName 暂时不算在 HTTP 路径上，可以根据需要写
+@RequestMapping("#foreach ($parentName in $parentNames)#if($parentName != ${module.name})/$parentName#end#end/${module.name}")
+@Validated
+public class ${nameHumpUp}Controller {
+
+    @Resource
+    private ${nameHumpUp}Service ${nameHump}Service;
+
+}

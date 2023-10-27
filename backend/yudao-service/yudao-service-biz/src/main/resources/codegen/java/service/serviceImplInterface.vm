@@ -1,0 +1,10 @@
+
+    @Override
+    #if(${interface.isTransaction} == true)
+    @Transactional(rollbackFor = Exception.class)
+    #end
+    public ${interfaceOutput} ${interfaceNameHump}(#if(${interface.inputServlet})HttpServletResponse response#if(${interfaceInput} != ""),#end #end#if(${interfaceInput} != "")${interfaceInput} ${interfaceInputVar}#end) {
+        #if(${interfaceOutput} != "void")
+        return null;
+        #end
+    }

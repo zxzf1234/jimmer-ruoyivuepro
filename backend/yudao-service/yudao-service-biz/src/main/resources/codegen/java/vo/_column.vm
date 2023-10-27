@@ -1,0 +1,14 @@
+## 提供给 baseVO、createVO、updateVO 生成字段
+    @Schema(description = "${column.columnComment}"#if (${column.required}), requiredMode = Schema.RequiredMode.REQUIRED#end#if ("$!column.example" != ""), example = "${column.example}"#end)
+#foreach ($validation in $column.validations)
+    #if ("$!validation.validationCondition" != "")
+    @${validation.validation}($validation.validationCondition, message = "$validation.message")
+    #else
+    @${validation.validation}(message = "$validation.message")
+    #end
+#end
+#if (${column.javaType} == "LocalDateTime")## 时间类型
+    @DateTimeFormat(pattern = FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)
+#end
+    private ${column.javaType} ${column.humpName};
+

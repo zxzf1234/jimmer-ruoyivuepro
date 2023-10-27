@@ -1,0 +1,13 @@
+
+    @Schema(description = "${param.comment}"#if (${param.required}), requiredMode = Schema.RequiredMode.REQUIRED#end#if ("$!param.example" != ""), example = "${param.example}"#end)
+#foreach ($validation in $param.validations)
+    #if ("$!validation.validationCondition" != "")
+    @${validation.validation}($validation.validationCondition, message = "$validation.message")
+    #else
+    @${validation.validation}(message = "$validation.message")
+    #end
+#end
+#if (${param.variableType} == "LocalDateTime" || ${param.variableType} == "LocalDateTime[]")## 时间类型
+    @DateTimeFormat(pattern = FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)
+#end
+    private #if($param.isList == true)List<#end${param.variableType}#if($param.isList == true)>#end ${param.humpName};

@@ -1,0 +1,23 @@
+#set($comment = "COMMENT")
+DROP TABLE IF EXISTS `${table.name}`;
+CREATE TABLE `${table.name}` (
+#foreach ($column in $columns)
+  #if (${column.columnName} != "id")
+  `${column.columnName}` ${column.dataType} #if (${column.nullable} == false)NOT NULL#end #if(${column.defaultValue} != "")DEFAULT ${column.defaultValue} #end$comment '${column.columnComment}',
+  #else
+  `id` ${column.dataType} NOT NULL#if (${column.dataType} == "BIGINT") AUTO_INCREMENT#end COMMENT '编号',
+  #end
+#end
+#foreach ($index in $indexes)
+  #set($indexColumnNames = "")
+  #foreach($indexColumnName in $index.columnNames)
+    #if($indexColumnNames == "")
+      #set($indexColumnNames = $indexColumnNames +  "`" + $indexColumnName + "`")
+    #else
+      #set($indexColumnNames = $indexColumnNames +   ","  + "`" + $indexColumnName + "`")
+    #end
+  #end
+  ${index.indexType} `${index.indexName}` ($indexColumnNames),
+#end
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '${table.comment}';
